@@ -1,8 +1,71 @@
+require 'pry'
+
 class Scrabble
 
+  # > game = Scrabble.new
+  # => ...
+  # > game.score("hello")
+  # => 8
+  # > game.score("")
+  # => 0
+  # > game.score(nil)
+  # => 0
+  # > game.score_with_multipliers('hello', [1,2,1,1,1])
+  # => 9
+  # > game.score_with_multipliers('hello', [1,2,1,1,1], 2)
+  # => 18
+  # > game.score_with_multipliers('sparkle', [1,2,1,3,1,2,1], 2)
+  # => 58
+
   def score(word)
-    1
+    sum_word_values(word)
   end
+
+  def score_with_multipliers(word, letter_multiplier, word_multiplier = 1)
+    sum_multiplied_points_list(word, letter_multiplier) * word_multiplier
+  end
+
+  def get_point_values_with_letter_multiplier(word, letter_multiplier = [])
+    point_values_list = get_point_values_for_each_letter(word)
+    letter_multiplier.zip(point_values_list).map do | multiplier, points |
+      multiplier * points
+    end
+    return point_values_list
+  end
+
+  def sum_multiplied_points_list(word, letter_multiplier = [])
+    point_values_list = get_point_values_with_letter_multiplier(word, letter_multiplier)
+    point_values_list.inject do |sum, points|
+      sum + points
+    end
+  end
+
+  def get_point_values_for_each_letter(word)
+    point_values_list = []
+    if word.class != String
+      point_values_list << 0
+    elsif word.empty?
+      point_values_list << 0
+    else
+      word.each_char do |char|
+        points = point_values[char.upcase]
+        point_values_list << points
+      end
+    end
+    return point_values_list
+  end
+
+  def sum_word_values(word)
+    points_for_each_letter = get_point_values_for_each_letter(word)
+    points_for_each_letter.inject do |sum, points|
+      sum + points
+    end
+    binding.pry
+  end
+
+  # def double_word_score(word_multiplier, word)
+  #   sum_word_values(word) * word_multiplier
+  # end
 
   def point_values
     {
@@ -15,4 +78,6 @@ class Scrabble
       "Y"=>4, "Z"=>10
     }
   end
+
+
 end
