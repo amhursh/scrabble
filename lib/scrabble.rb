@@ -30,7 +30,6 @@ class Scrabble
     letter_multiplier.zip(point_values_list).map do | multiplier, points |
       multiplier * points
     end
-    return point_values_list
   end
 
   def sum_multiplied_points_list(word, letter_multiplier = [])
@@ -56,11 +55,10 @@ class Scrabble
   end
 
   def sum_word_values(word)
-    points_for_each_letter = get_point_values_for_each_letter(word)
+    points_for_each_letter = get_point_values_with_letter_multiplier(word)
     points_for_each_letter.inject do |sum, points|
       sum + points
     end
-    binding.pry
   end
 
   # def double_word_score(word_multiplier, word)
@@ -81,3 +79,13 @@ class Scrabble
 
 
 end
+
+p scrab = Scrabble.new
+p scrab.score("Hello")
+p scrab.get_point_values_for_each_letter("Hello")
+p scrab.score("Hello")
+p scrab.score("")
+p scrab.score(0)
+p scrab.score_with_multipliers('hello', [1,2,1,1,1])
+p scrab.score_with_multipliers('hello', [1,2,1,1,1], 2)
+p scrab.score_with_multipliers('hello', [1,2,1,1,1], 3)
